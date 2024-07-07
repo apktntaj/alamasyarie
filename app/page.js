@@ -5,7 +5,7 @@ import MenuItem from "./components/MenuItem";
 
 export default function Home() {
   return (
-    <div className="flex flex-col gap-3 justify-center items-center">
+    <div className="container flex flex-col gap-3 justify-center items-center">
       <Image
         className="rounded-full mx-auto mt-16"
         src="/img-of-me.jpeg"
