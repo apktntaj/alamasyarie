@@ -3,7 +3,7 @@ import React from "react";
 
 export default function ShowcasePage() {
   return (
-    <div className="container flex">
+    <div className="container flex mx-2">
       <Link className="m-auto" href="https://malika-indol.vercel.app/cek-tarif">
         <div className="max-w-sm rounded overflow-hidden shadow-lg">
           <div className="px-6 py-4">
