@@ -5,17 +5,19 @@ import MenuItem from "./components/MenuItem";
 
 export default function Home() {
   return (
-    <div className="container flex flex-col gap-3 justify-center items-center">
-      <Image
-        className="rounded-full mx-auto mt-16"
-        src="/img-of-me.jpeg"
-        alt="Logo"
-        width={200}
-        height={200}
-      />
-      <Description />
-      <Contacts />
-      <MenuItem />
+    <div className="container flex flex-col gap-3 justify-between items-center relative">
+      <div className="mt-12">
+        <Image
+          className="rounded-full mx-auto mt-16 mb-5"
+          src="/img-of-me.jpeg"
+          alt="Logo"
+          width={200}
+          height={200}
+        />
+        <Description />
+        <Contacts />
+        <MenuItem />
+      </div>
     </div>
   );
 }

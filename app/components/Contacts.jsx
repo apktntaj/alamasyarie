@@ -4,8 +4,8 @@ import { FaGithub, FaLinkedin } from "react-icons/fa";
 
 export default function Contacts() {
   return (
-    <div>
-      <ul className="flex gap-4">
+    <div className="container mb-9">
+      <ul className="flex justify-evenly items-center">
         <li>
           <Link href={"mailto:maiaelarsya@gmail.com"}>
             <MdMarkEmailUnread size={25} />
