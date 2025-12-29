@@ -3,12 +3,12 @@
 ;; Alamasyarie - Main Program
 ;; A simple Racket application
 
+;; Returns a greeting message
 (define (greet name)
-  "Returns a greeting message"
   (format "Hello, ~a! Welcome to Alamasyarie Racket Project." name))
 
+;; Main entry point of the application
 (define (main)
-  "Main entry point of the application"
   (displayln "===========================================")
   (displayln "  Alamasyarie - Racket Project")
   (displayln "===========================================")

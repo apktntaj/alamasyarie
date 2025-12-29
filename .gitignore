@@ -12,7 +12,7 @@ Thumbs.db
 *.swp
 *.swo
 .#*
-\#*\#
+'#*#'
 
 # IDE files
 .idea/
