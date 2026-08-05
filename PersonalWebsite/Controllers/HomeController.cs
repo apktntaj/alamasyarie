@@ -34,8 +34,7 @@ public class HomeController : Controller
         var pipeline = new MarkdownPipelineBuilder().UseAdvancedExtensions().Build();
         return Directory.EnumerateFiles(folder, "*.md")
             .Select(path => ParseBlogPost(path, pipeline))
-            .Where(post => post != null)
-            .Select(post => post!)
+            .OfType<BlogPostViewModel>()
             .OrderByDescending(post => post.Date);
     }
 

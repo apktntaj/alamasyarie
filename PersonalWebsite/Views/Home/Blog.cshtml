@@ -10,8 +10,7 @@
 <div class="list-group">
     @foreach (var post in Model)
     {
-        var postUrl = Url.Action("BlogPost", "Home", new { slug = post.Slug });
-        <a class="list-group-item list-group-item-action mb-2" href="@postUrl">
+        <a class="list-group-item list-group-item-action mb-2" href='@Url.Action("BlogPost", "Home", new { slug = post.Slug })'>
             <div class="d-flex w-100 justify-content-between">
                 <h5 class="mb-1">@post.Title</h5>
                 <small>@post.Date.ToString("MMMM d, yyyy")</small>
