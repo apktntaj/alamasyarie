@@ -1,0 +1,24 @@
+@model IEnumerable<PersonalWebsite.Models.BlogPostViewModel>
+
+@{
+    ViewData["Title"] = "Blog";
+}
+
+<h1>Blog</h1>
+<p>Read my personal blog about anything.</p>
+
+<div class="list-group">
+    @foreach (var post in Model)
+    {
+        var postUrl = Url.Action("BlogPost", "Home", new { slug = post.Slug });
+        <a class="list-group-item list-group-item-action mb-2" href="@postUrl">
+            <div class="d-flex w-100 justify-content-between">
+                <h5 class="mb-1">@post.Title</h5>
+                <small>@post.Date.ToString("MMMM d, yyyy")</small>
+            </div>
+            <p class="mb-1">@post.Summary</p>
+            <small>Slug: @post.Slug</small>
+        </a>
+    }
+</div>
+

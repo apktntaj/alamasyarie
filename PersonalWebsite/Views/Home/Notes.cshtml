@@ -1,0 +1,23 @@
+@model IEnumerable<PersonalWebsite.Models.NoteViewModel>
+
+@{
+    ViewData["Title"] = "CS Notes";
+}
+
+<h1>Computer Science Notes</h1>
+<p>Notes and summaries of key concepts I study in computer science.</p>
+
+<div class="row row-cols-1 row-cols-md-3 g-4">
+    @foreach (var note in Model)
+    {
+        <div class="col">
+            <div class="card h-100 border-primary">
+                <div class="card-body">
+                    <h5 class="card-title">@note.Title</h5>
+                    <h6 class="card-subtitle mb-2 text-muted">@note.Category</h6>
+                    <p class="card-text">@note.Excerpt</p>
+                </div>
+            </div>
+        </div>
+    }
+</div>
