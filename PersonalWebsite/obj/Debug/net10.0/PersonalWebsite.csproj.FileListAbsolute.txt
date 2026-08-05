@@ -99,3 +99,4 @@
 /home/aa/Projects/alamasyarie/PersonalWebsite/bin/Debug/net10.0/Markdig.dll
 /home/aa/Projects/alamasyarie/PersonalWebsite/obj/Debug/net10.0/PersonalWebsite.csproj.AssemblyReference.cache
 /home/aa/Projects/alamasyarie/PersonalWebsite/obj/Debug/net10.0/Personal.8D145B4F.Up2Date
+/home/aa/Projects/alamasyarie/PersonalWebsite/obj/Debug/net10.0/compressed/zji70eleqh-{0}-qs1ajqqhxw-qs1ajqqhxw.gz

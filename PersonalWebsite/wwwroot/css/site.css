@@ -2,6 +2,19 @@ html {
   font-size: 14px;
 }
 
+:root {
+  color-scheme: dark;
+  --bg: #0d1117;
+  --surface: #141b26;
+  --surface-strong: #1f2a3c;
+  --text: #e6edf3;
+  --muted: #94a3b8;
+  --border: #2e4054;
+  --primary: #5ab0ff;
+  --primary-strong: #7ab8ff;
+  --hover: #9cc4ff;
+}
+
 @media (min-width: 768px) {
   html {
     font-size: 16px;
@@ -9,7 +22,7 @@ html {
 }
 
 .btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
-  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+  box-shadow: 0 0 0 0.1rem rgba(90, 176, 255, 0.4), 0 0 0 0.25rem rgba(90, 176, 255, 0.25);
 }
 
 html {
@@ -19,6 +32,8 @@ html {
 
 body {
   margin-bottom: 60px;
+  background-color: var(--bg);
+  color: var(--text);
 }
 
 .form-floating > .form-control-plaintext::placeholder, .form-floating > .form-control::placeholder {
@@ -28,4 +43,67 @@ body {
 
 .form-floating > .form-control-plaintext:focus::placeholder, .form-floating > .form-control:focus::placeholder {
   text-align: start;
+}
+
+body, .container, .navbar, .footer, .card, .list-group-item, .table {
+  background-color: transparent;
+}
+
+a {
+  color: var(--primary);
+}
+
+a:hover, a:focus {
+  color: var(--hover);
+}
+
+.navbar {
+  background-color: #0f1724 !important;
+}
+
+.navbar-nav .nav-link {
+  color: var(--text) !important;
+}
+
+.navbar-nav .nav-link:hover,
+.navbar-nav .nav-link:focus {
+  color: var(--hover) !important;
+}
+
+footer.footer {
+  background-color: #0b1220;
+  color: var(--muted);
+}
+
+.border-bottom {
+  border-color: var(--border) !important;
+}
+
+.card,
+.table,
+.list-group-item,
+.form-control,
+.form-select,
+textarea,
+.btn,
+.btn-outline-secondary {
+  background-color: var(--surface) !important;
+  color: var(--text) !important;
+  border-color: var(--border) !important;
+}
+
+.table thead th,
+.table thead td {
+  border-bottom-color: var(--border) !important;
+}
+
+.form-control,
+.form-select,
+textarea {
+  background-color: #172136 !important;
+  color: var(--text) !important;
+}
+
+::selection {
+  background-color: rgba(90, 176, 255, 0.3);
 }
