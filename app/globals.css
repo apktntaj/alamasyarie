@@ -1,0 +1,150 @@
+:root {
+  color-scheme: dark;
+  font-family: Inter, system-ui, sans-serif;
+  background: #0b1120;
+  color: #e8f1ff;
+  line-height: 1.6;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  min-height: 100%;
+}
+
+body {
+  background: radial-gradient(circle at top, rgba(43, 136, 255, 0.18), transparent 35%),
+    linear-gradient(180deg, #070b16 0%, #091122 100%);
+}
+
+a {
+  color: #8dc6ff;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+.container {
+  width: min(1120px, calc(100% - 2rem));
+  margin: 0 auto;
+  padding: 2rem 0;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.nav {
+  display: flex;
+  gap: 1.25rem;
+  flex-wrap: wrap;
+}
+
+.nav a {
+  color: inherit;
+  font-weight: 600;
+}
+
+.card {
+  background: rgba(14, 22, 38, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 24px;
+  padding: 1.75rem;
+  backdrop-filter: blur(14px);
+}
+
+.grid {
+  display: grid;
+  gap: 1.5rem;
+}
+
+.title {
+  font-size: clamp(2rem, 3vw, 3rem);
+  margin: 0;
+}
+
+.subtitle {
+  max-width: 60ch;
+  margin: 1rem 0 0;
+  color: #d3dbf1;
+}
+
+.post-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 1rem;
+}
+
+.post-card {
+  padding: 1.3rem;
+  border-radius: 18px;
+  background: rgba(12, 17, 31, 0.9);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.post-card h3 {
+  margin: 0 0 0.5rem;
+}
+
+.post-card p {
+  margin: 0;
+  color: #c3cad9;
+}
+
+.metadata {
+  display: flex;
+  gap: 0.75rem;
+  color: #91a8cc;
+  font-size: 0.95rem;
+}
+
+.markdown-content {
+  margin-top: 1.5rem;
+}
+
+.markdown-content :where(h1,h2,h3,h4,h5,h6) {
+  color: #ffffff;
+}
+
+.markdown-content p {
+  color: #d4deff;
+}
+
+.markdown-content blockquote {
+  color: #a8bed4;
+  border-left: 3px solid #5d86d6;
+  padding-left: 1rem;
+}
+
+.markdown-content code {
+  background: rgba(255,255,255,0.06);
+  padding: 0.2rem 0.4rem;
+  border-radius: 8px;
+  color: #f8f8ff;
+}
+
+.markdown-content pre {
+  background: rgba(255,255,255,0.06);
+  padding: 1rem;
+  border-radius: 18px;
+  overflow-x: auto;
+}
+
+@media (max-width: 640px) {
+  .header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}

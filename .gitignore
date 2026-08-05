@@ -1,22 +1,5 @@
-# Racket compiled files
-compiled/
-*.zo
-*.dep
-
-# OS files
+node_modules
+.next
+out
 .DS_Store
-Thumbs.db
-
-# Editor files
-*~
-*.swp
-*.swo
-.#*
-'#*#'
-
-# IDE files
-.idea/
-.vscode/
-
-# Misc
-*.log
+.env*
