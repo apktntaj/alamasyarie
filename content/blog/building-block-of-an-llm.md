@@ -390,7 +390,7 @@ Dalam *The Adventure of the Dancing Men*, Holmes melihat simbol-simbol yang awal
 🕺 🕺 🕺 🕺 ...
 ```
 
-Ia kemudian mengamati **pola, frekuensi, dan konteks** untuk menemukan sistem di balik simbol tersebut.
+Ia kemudian mengamati **pola, frekuensi, dan konteks** untuk menemukan sistem di balik simbol tersebut. Dalam bahasa inggris, huruf yang paling sering muncul adalah `e`. Ia lalu mencari simbol yang paling sering muncul dan menggantinya dengan huruf `e`. Setelah itu ia mencari simbol dengan sedikit karakter dan mencari relasinya dengan kata `I, of, a, an dll`. Lalu setelah itu ia mencari akhiran simbol yang sama dan mengasumsikan itu adalah `tion, ing, ed dll`. Setelah semua selesai akhirnya ia berhasil memecahkan arti dari simbol dancing men.
 
 Ada kemiripan konseptual dengan language model:
 
