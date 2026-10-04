@@ -6,7 +6,7 @@ const postsDirectory = path.join(process.cwd(), 'content');
 
 export interface PostMeta {
   title: string;
-  date: string;
+  date?: string;
   slug: string;
   excerpt: string;
   type: 'blog' | 'notes';
@@ -26,19 +26,21 @@ export function getPostBySlug(type: 'blog' | 'notes', slug: string): PostData {
   const fullPath = path.join(postsDirectory, type, `${realSlug}.md`);
   const fileContents = fs.readFileSync(fullPath, 'utf8');
   const { data, content } = matter(fileContents);
+  const titleFromContent = content.match(/^\s*#\s+(.+?)\s*$/m)?.[1];
+  const title = data.title || titleFromContent || realSlug;
 
   return {
-    title: data.title || realSlug,
-    date: data.date || '1970-01-01',
+    title,
+    date: data.date,
     excerpt: data.excerpt || '',
     slug: realSlug,
     type,
-    content,
+    content: titleFromContent ? content.replace(/^\s*#\s+.+?\s*\r?\n+/, '') : content,
   };
 }
 
 export function getAllPosts(type: 'blog' | 'notes') {
   return getPostSlugs(type)
     .map((slug) => getPostBySlug(type, slug))
-    .sort((a, b) => (a.date < b.date ? 1 : -1));
+    .sort((a, b) => (a.date ?? '') < (b.date ?? '') ? 1 : -1);
 }

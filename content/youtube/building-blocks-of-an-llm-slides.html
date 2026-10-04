@@ -1,0 +1,854 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Building Blocks of an LLM — Slide Deck</title>
+  <style>
+    :root {
+      --ink: #f7f4ed;
+      --muted: #a9b3c4;
+      --bg: #080d18;
+      --panel: #101827;
+      --panel-2: #152137;
+      --cyan: #66d9e8;
+      --orange: #ff9f43;
+      --green: #65d69e;
+      --red: #ff6b6b;
+      --line: rgba(255,255,255,.12);
+      --shadow: 0 28px 90px rgba(0,0,0,.42);
+    }
+
+    * { box-sizing: border-box; }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      overflow: hidden;
+      background: #03060c;
+      color: var(--ink);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    body {
+      display: grid;
+      place-items: center;
+    }
+
+    .deck {
+      position: relative;
+      width: min(100vw, calc(100vh * 16 / 9));
+      height: min(100vh, calc(100vw * 9 / 16));
+      overflow: hidden;
+      background:
+        radial-gradient(circle at 85% 10%, rgba(102,217,232,.12), transparent 24%),
+        radial-gradient(circle at 10% 90%, rgba(255,159,67,.10), transparent 26%),
+        var(--bg);
+      box-shadow: var(--shadow);
+    }
+
+    .deck::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      opacity: .13;
+      pointer-events: none;
+      background-image:
+        linear-gradient(rgba(255,255,255,.045) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.045) 1px, transparent 1px);
+      background-size: 42px 42px;
+      mask-image: linear-gradient(to bottom right, black, transparent 72%);
+    }
+
+    .slide {
+      position: absolute;
+      inset: 0;
+      display: none;
+      padding: 6.5% 7.3%;
+      isolation: isolate;
+    }
+
+    .slide.active {
+      display: flex;
+      flex-direction: column;
+      animation: slide-in .32s ease both;
+    }
+
+    @keyframes slide-in {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    h1, h2, h3, p { margin-top: 0; }
+
+    h1 {
+      max-width: 970px;
+      margin-bottom: 24px;
+      font-size: clamp(44px, 5.7vw, 90px);
+      line-height: .98;
+      letter-spacing: -.055em;
+    }
+
+    h2 {
+      max-width: 1100px;
+      margin-bottom: 34px;
+      font-size: clamp(34px, 4.15vw, 66px);
+      line-height: 1.04;
+      letter-spacing: -.045em;
+    }
+
+    h3 {
+      margin-bottom: 14px;
+      color: var(--cyan);
+      font-size: clamp(19px, 1.75vw, 29px);
+      letter-spacing: -.02em;
+    }
+
+    p, li, td, th {
+      font-size: clamp(18px, 1.63vw, 27px);
+      line-height: 1.45;
+    }
+
+    ul, ol { margin: 0; padding-left: 1.25em; }
+    li { margin: .34em 0; }
+    strong { color: white; }
+
+    .eyebrow {
+      margin-bottom: 16px;
+      color: var(--orange);
+      font-size: clamp(13px, 1.05vw, 18px);
+      font-weight: 800;
+      letter-spacing: .16em;
+      text-transform: uppercase;
+    }
+
+    .lede {
+      max-width: 930px;
+      color: var(--muted);
+      font-size: clamp(21px, 2vw, 34px);
+      line-height: 1.38;
+    }
+
+    .accent { color: var(--cyan); }
+    .warm { color: var(--orange); }
+    .good { color: var(--green); }
+    .muted { color: var(--muted); }
+    .small { font-size: clamp(14px, 1.15vw, 20px); }
+
+    .tag {
+      display: inline-flex;
+      width: fit-content;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 13px;
+      border: 1px solid rgba(102,217,232,.35);
+      border-radius: 999px;
+      color: var(--cyan);
+      background: rgba(102,217,232,.08);
+      font-size: clamp(13px, 1vw, 17px);
+      font-weight: 750;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 28px;
+      width: 100%;
+      align-items: stretch;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 22px;
+      width: 100%;
+    }
+
+    .card {
+      padding: 25px 28px;
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      background: linear-gradient(145deg, rgba(21,33,55,.93), rgba(12,20,34,.92));
+      box-shadow: 0 16px 40px rgba(0,0,0,.16);
+    }
+
+    .card p:last-child { margin-bottom: 0; }
+
+    .number {
+      display: grid;
+      width: 44px;
+      height: 44px;
+      margin-bottom: 16px;
+      place-items: center;
+      border-radius: 13px;
+      color: #071018;
+      background: var(--cyan);
+      font-size: 20px;
+      font-weight: 900;
+    }
+
+    .quote {
+      max-width: 1120px;
+      padding: 26px 30px;
+      border-left: 6px solid var(--orange);
+      border-radius: 0 18px 18px 0;
+      background: rgba(255,159,67,.08);
+      font-size: clamp(25px, 2.5vw, 42px);
+      font-weight: 700;
+      line-height: 1.32;
+    }
+
+    .code {
+      padding: 22px 27px;
+      overflow: hidden;
+      border: 1px solid rgba(102,217,232,.23);
+      border-radius: 17px;
+      color: #dffbff;
+      background: #07101c;
+      font: 650 clamp(18px, 1.65vw, 28px)/1.55 "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+      white-space: pre-wrap;
+    }
+
+    .flow {
+      display: flex;
+      width: 100%;
+      align-items: center;
+      justify-content: center;
+      gap: 13px;
+      margin-top: 14px;
+    }
+
+    .flow.vertical {
+      flex-direction: column;
+      gap: 7px;
+    }
+
+    .flow .node {
+      min-width: 142px;
+      padding: 15px 18px;
+      border: 1px solid rgba(102,217,232,.27);
+      border-radius: 14px;
+      text-align: center;
+      background: var(--panel-2);
+      font-size: clamp(15px, 1.25vw, 22px);
+      font-weight: 750;
+    }
+
+    .arrow {
+      color: var(--orange);
+      font-size: clamp(24px, 2.2vw, 38px);
+      font-weight: 900;
+    }
+
+    .probability {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0 10px;
+    }
+
+    .probability th {
+      padding: 0 16px 7px;
+      color: var(--muted);
+      text-align: left;
+      font-size: clamp(14px, 1.1vw, 19px);
+      text-transform: uppercase;
+      letter-spacing: .08em;
+    }
+
+    .probability td {
+      padding: 13px 16px;
+      background: rgba(21,33,55,.82);
+    }
+
+    .probability td:first-child { border-radius: 11px 0 0 11px; }
+    .probability td:last-child { border-radius: 0 11px 11px 0; }
+
+    .bar-track {
+      position: relative;
+      width: 100%;
+      height: 15px;
+      overflow: hidden;
+      border-radius: 999px;
+      background: rgba(255,255,255,.08);
+    }
+
+    .bar {
+      height: 100%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, var(--cyan), #4ba3ff);
+    }
+
+    .token-row {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 12px;
+      margin: 10px 0 24px;
+    }
+
+    .token {
+      padding: 12px 16px;
+      border: 1px solid rgba(102,217,232,.35);
+      border-radius: 12px;
+      color: var(--cyan);
+      background: rgba(102,217,232,.09);
+      font: 750 clamp(17px, 1.4vw, 24px) "SFMono-Regular", Consolas, monospace;
+    }
+
+    .token:nth-child(2n) {
+      border-color: rgba(255,159,67,.4);
+      color: var(--orange);
+      background: rgba(255,159,67,.08);
+    }
+
+    .big-symbols {
+      display: flex;
+      gap: 20px;
+      margin: auto 0;
+      align-items: end;
+      justify-content: center;
+      font-size: clamp(54px, 7vw, 110px);
+      filter: drop-shadow(0 14px 20px rgba(0,0,0,.35));
+    }
+
+    .big-symbols span:nth-child(2n) { transform: translateY(-18px) rotate(-4deg); }
+    .big-symbols span:nth-child(3n) { color: var(--orange); transform: rotate(5deg); }
+
+    .comparison {
+      width: 100%;
+      overflow: hidden;
+      border-collapse: collapse;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: rgba(16,24,39,.78);
+    }
+
+    .comparison th, .comparison td {
+      padding: 17px 22px;
+      border-bottom: 1px solid var(--line);
+      text-align: left;
+    }
+
+    .comparison th { color: var(--cyan); background: rgba(102,217,232,.07); }
+    .comparison tr:last-child td { border-bottom: 0; }
+
+    .generation {
+      display: grid;
+      gap: 9px;
+      width: 90%;
+    }
+
+    .generation div {
+      width: fit-content;
+      padding: 8px 14px;
+      border-radius: 9px;
+      background: rgba(255,255,255,.055);
+      font: 650 clamp(16px, 1.32vw, 23px) "SFMono-Regular", Consolas, monospace;
+    }
+
+    .generation div::after { content: "▌"; color: var(--orange); }
+
+    .recap {
+      display: grid;
+      grid-template-columns: 74px 1fr;
+      gap: 15px 21px;
+      align-items: center;
+      max-width: 1100px;
+    }
+
+    .recap .num {
+      display: grid;
+      width: 62px;
+      height: 62px;
+      place-items: center;
+      border-radius: 18px;
+      color: #06131a;
+      background: var(--cyan);
+      font-size: 28px;
+      font-weight: 900;
+    }
+
+    .recap p { margin: 0; font-size: clamp(22px, 2vw, 34px); }
+
+    .footer-label {
+      position: absolute;
+      right: 7.3%;
+      bottom: 4.5%;
+      color: rgba(255,255,255,.38);
+      font-size: clamp(11px, .86vw, 15px);
+      font-weight: 650;
+      letter-spacing: .06em;
+    }
+
+    .progress {
+      position: absolute;
+      z-index: 20;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      height: 5px;
+      background: rgba(255,255,255,.06);
+    }
+
+    .progress > span {
+      display: block;
+      width: 0;
+      height: 100%;
+      background: linear-gradient(90deg, var(--orange), var(--cyan));
+      transition: width .25s ease;
+    }
+
+    .controls {
+      position: absolute;
+      z-index: 30;
+      right: 18px;
+      bottom: 17px;
+      display: flex;
+      gap: 8px;
+      opacity: 0;
+      transition: opacity .2s ease;
+    }
+
+    .deck:hover .controls, .controls:focus-within { opacity: 1; }
+
+    button {
+      display: grid;
+      width: 38px;
+      height: 38px;
+      padding: 0;
+      place-items: center;
+      border: 1px solid var(--line);
+      border-radius: 11px;
+      color: var(--ink);
+      background: rgba(8,13,24,.85);
+      cursor: pointer;
+      font-size: 17px;
+    }
+
+    button:hover { border-color: var(--cyan); color: var(--cyan); }
+
+    .counter {
+      position: absolute;
+      z-index: 20;
+      bottom: 4.5%;
+      left: 3.3%;
+      color: rgba(255,255,255,.45);
+      font: 700 clamp(11px, .86vw, 15px) "SFMono-Regular", Consolas, monospace;
+    }
+
+    .notes-panel {
+      position: fixed;
+      z-index: 100;
+      right: 20px;
+      bottom: 20px;
+      left: 20px;
+      display: none;
+      max-height: 35vh;
+      padding: 20px 24px;
+      overflow: auto;
+      border: 1px solid rgba(102,217,232,.4);
+      border-radius: 16px;
+      color: #eafcff;
+      background: rgba(4,9,17,.96);
+      box-shadow: 0 20px 60px rgba(0,0,0,.5);
+      font-size: 17px;
+      line-height: 1.55;
+    }
+
+    .notes-panel.show { display: block; }
+    .notes-panel b { color: var(--orange); }
+
+    .kbd-help {
+      position: fixed;
+      z-index: 101;
+      inset: 0;
+      display: none;
+      place-items: center;
+      background: rgba(0,0,0,.76);
+    }
+
+    .kbd-help.show { display: grid; }
+
+    .kbd-help .card { width: min(560px, 90vw); }
+    kbd {
+      display: inline-block;
+      min-width: 34px;
+      margin-right: 8px;
+      padding: 4px 8px;
+      border: 1px solid rgba(255,255,255,.25);
+      border-radius: 7px;
+      background: #07101c;
+      text-align: center;
+      font: 700 14px monospace;
+    }
+
+    @media (max-aspect-ratio: 4/3) {
+      .slide { padding: 5.5%; }
+      .grid-2, .grid-3 { gap: 14px; }
+      .card { padding: 18px; }
+    }
+
+    @media print {
+      html, body { overflow: visible; background: white; }
+      .deck { display: block; width: 100%; height: auto; box-shadow: none; }
+      .slide, .slide.active {
+        position: relative;
+        display: flex !important;
+        width: 100vw;
+        height: 56.25vw;
+        page-break-after: always;
+        animation: none;
+      }
+      .controls, .progress, .counter, .notes-panel, .kbd-help { display: none !important; }
+    }
+  </style>
+</head>
+<body>
+  <main class="deck" id="deck" aria-label="Presentasi Building Blocks of an LLM">
+    <section class="slide active" data-notes="Ketika ChatGPT menjawab pertanyaan, apakah ia mengambil jawaban dari sebuah database? Apakah ia memahami setiap kata seperti manusia? Untuk menjawabnya, kita akan membongkar beberapa building block utama sebuah large language model, mulai dari token hingga next-token prediction.">
+      <div class="eyebrow">Language Model · Explained</div>
+      <h1>Building Blocks<br>of an <span class="accent">LLM</span></h1>
+      <p class="lede">Dari <em>Dancing Men</em> ke <strong>next-token prediction</strong>.</p>
+      <div class="big-symbols" aria-hidden="true"><span>🕺</span><span>🕴️</span><span>🤸</span><span>→</span><span>▣</span><span>▣</span></div>
+      <span class="footer-label">alamasyarie</span>
+    </section>
+
+    <section class="slide" data-notes="Dalam The Adventure of the Dancing Men, Sherlock Holmes menghadapi pesan yang tersusun dari simbol-simbol misterius. Ia tidak langsung mengetahui artinya. Ia mencari pengulangan, memperhatikan frekuensi, lalu menggunakan konteks untuk membentuk hipotesis tentang arti setiap simbol.">
+      <div class="eyebrow">01 · Sebuah misteri</div>
+      <h2>Sebuah pesan tanpa arti?</h2>
+      <div class="grid-2">
+        <div class="card">
+          <div class="big-symbols" style="font-size:clamp(42px,5.4vw,86px)"><span>🕺</span><span>🤸</span><span>🕴️</span><span>🕺</span></div>
+        </div>
+        <div class="card">
+          <h3>Bagaimana memecahkannya?</h3>
+          <ul>
+            <li>Cari simbol yang berulang</li>
+            <li>Amati frekuensi</li>
+            <li>Gunakan konteks</li>
+            <li>Bentuk sebuah hipotesis</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide" data-notes="Ada kemiripan konseptual dengan language model. Keduanya berangkat dari simbol dan pola. Namun analogi ini memiliki batas. Holmes secara sadar mencoba menemukan aturan sebuah cipher. Language model mempelajari parameter matematis dari data dalam jumlah sangat besar.">
+      <div class="eyebrow">02 · Sebuah kemiripan</div>
+      <h2>LLM juga belajar dari <span class="accent">pola</span></h2>
+      <div class="grid-2">
+        <div class="card">
+          <span class="tag">Dancing Men</span>
+          <div class="flow vertical">
+            <div class="node">Simbol</div><div class="arrow">↓</div>
+            <div class="node">Pola</div><div class="arrow">↓</div>
+            <div class="node">Inferensi</div>
+          </div>
+        </div>
+        <div class="card">
+          <span class="tag">Language Model</span>
+          <div class="flow vertical">
+            <div class="node">Token</div><div class="arrow">↓</div>
+            <div class="node">Pola statistik</div><div class="arrow">↓</div>
+            <div class="node">Probabilitas</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide" data-notes="Secara umum, language model mempelajari distribusi probabilitas bahasa. Khusus pada autoregressive language model seperti GPT, tugas utamanya dapat kita sederhanakan menjadi satu pertanyaan: berdasarkan konteks yang tersedia, token apa yang mungkin muncul berikutnya?">
+      <div class="eyebrow">03 · Definisi</div>
+      <h2>Apa itu <span class="accent">language model?</span></h2>
+      <div class="quote">Model yang mempelajari <span class="warm">distribusi probabilitas</span> bahasa.</div>
+      <p class="lede" style="margin-top:30px">Pada model autoregressive seperti GPT:</p>
+      <p style="font-size:clamp(25px,2.35vw,40px);font-weight:800">“Dengan konteks ini, token apa yang mungkin muncul berikutnya?”</p>
+    </section>
+
+    <section class="slide" data-notes="Misalnya kita memberikan kalimat The cat is sitting on the. Model tidak langsung memiliki satu jawaban mutlak. Ia menghasilkan probabilitas untuk token-token di dalam vocabulary-nya. Mat mungkin memperoleh enam puluh persen, floor dua puluh persen, dan seterusnya.">
+      <div class="eyebrow">04 · Next-token prediction</div>
+      <h2><span class="muted">The cat is sitting on the</span> <span class="warm">...</span></h2>
+      <table class="probability">
+        <thead><tr><th>Token</th><th style="width:65%">Probabilitas</th><th>Nilai</th></tr></thead>
+        <tbody>
+          <tr><td><strong>mat</strong></td><td><div class="bar-track"><div class="bar" style="width:60%"></div></div></td><td>60%</td></tr>
+          <tr><td>floor</td><td><div class="bar-track"><div class="bar" style="width:20%"></div></div></td><td>20%</td></tr>
+          <tr><td>chair</td><td><div class="bar-track"><div class="bar" style="width:8%"></div></div></td><td>8%</td></tr>
+          <tr><td>table</td><td><div class="bar-track"><div class="bar" style="width:5%"></div></div></td><td>5%</td></tr>
+        </tbody>
+      </table>
+      <p class="small muted" style="margin-top:14px">Model menghasilkan distribusi probabilitas—bukan satu jawaban pasti.</p>
+    </section>
+
+    <section class="slide" data-notes="Namun model tidak bekerja langsung dengan kata seperti yang kita pahami. Sebelum masuk ke model, teks dipecah oleh tokenizer menjadi unit-unit bernama token. Token bisa berupa satu kata, bagian kata, tanda baca, atau gabungan karakter tertentu.">
+      <div class="eyebrow">05 · Tokenization</div>
+      <h2>Sebelum diproses, teks <span class="accent">dipecah</span></h2>
+      <div class="flow" style="margin-bottom:34px">
+        <div class="node">Teks</div><div class="arrow">→</div>
+        <div class="node">Tokenizer</div><div class="arrow">→</div>
+        <div class="node">Token</div>
+      </div>
+      <div class="grid-3">
+        <div class="card"><div class="number">A</div><h3>Satu kata</h3><p class="muted">Contoh: <strong>makan</strong></p></div>
+        <div class="card"><div class="number">B</div><h3>Bagian kata</h3><p class="muted">Contoh: <strong>pela</strong> + <strong>jaran</strong></p></div>
+        <div class="card"><div class="number">C</div><h3>Karakter</h3><p class="muted">Tanda baca, spasi, atau kombinasinya</p></div>
+      </div>
+    </section>
+
+    <section class="slide" data-notes="Bayangkan token sebagai potongan Lego. Daripada menyediakan satu Lego khusus untuk setiap bentuk kata, tokenizer dapat memakai potongan yang bisa dikombinasikan kembali. Tetapi analogi ini jangan dibawa terlalu jauh. Tokenizer tidak selalu memahami akar kata dan imbuhan. Pemotongannya bergantung pada algoritma serta pola dalam data.">
+      <div class="eyebrow">06 · Mental model</div>
+      <h2>Token seperti <span class="warm">potongan Lego</span></h2>
+      <p class="lede">Potongan yang sama dapat digunakan kembali untuk membentuk banyak urutan.</p>
+      <div class="token-row">
+        <span class="token">ajar</span><span class="token">bel</span><span class="token">pel</span>
+        <span class="token">mem</span><span class="token">di</span><span class="token">an</span><span class="token">i</span>
+      </div>
+      <div class="card" style="border-color:rgba(255,159,67,.32)">
+        <h3 class="warm">Perlu diingat</h3>
+        <p>Potongan token <strong>tidak harus sama</strong> dengan akar kata, imbuhan, atau struktur linguistik.</p>
+      </div>
+    </section>
+
+    <section class="slide" data-notes="Seluruh token yang dikenali tokenizer disebut vocabulary. Walaupun vocabulary memiliki ukuran terbatas, token-token tersebut dapat dikombinasikan menjadi jumlah urutan yang sangat besar. Karena itu, vocabulary berisi lima puluh ribu token bukan berarti model hanya bisa menulis lima puluh ribu kata.">
+      <div class="eyebrow">07 · Vocabulary</div>
+      <h2>Kumpulan seluruh token yang <span class="accent">tersedia</span></h2>
+      <div class="flow">
+        <div class="node">Vocabulary<br><span class="muted small">terbatas</span></div>
+        <div class="arrow">→</div>
+        <div class="node">Kombinasi token<br><span class="muted small">sangat banyak</span></div>
+        <div class="arrow">→</div>
+        <div class="node">Dokumen<br><span class="muted small">open-ended</span></div>
+      </div>
+      <div class="quote" style="margin-top:42px">50.000 token <span class="warm">≠</span> hanya 50.000 kata</div>
+    </section>
+
+    <section class="slide" data-notes="Lalu bagaimana model belajar? Salah satu jawabannya adalah self-supervised learning. Kita dapat mengambil teks yang sudah ada, menggunakan token-token sebelumnya sebagai input, dan token berikutnya sebagai target. Target pelatihan berasal dari data itu sendiri sehingga tidak perlu diberi label satu per satu oleh manusia.">
+      <div class="eyebrow">08 · Training</div>
+      <h2>Bagaimana model <span class="accent">belajar?</span></h2>
+      <span class="tag">Self-supervised learning</span>
+      <div class="code" style="margin-top:24px"><span class="muted">Input  :</span> The cat sat on the
+<span class="muted">Target :</span> <span class="warm">mat</span></div>
+      <div class="grid-2" style="margin-top:25px">
+        <div class="card"><h3>Input</h3><p>Konteks dari teks</p></div>
+        <div class="card"><h3>Target</h3><p>Token berikutnya dari teks yang sama</p></div>
+      </div>
+      <p class="small muted" style="margin-top:18px">Data itu sendiri menyediakan target pelatihan.</p>
+    </section>
+
+    <section class="slide" data-notes="Saat training, model membuat prediksi. Prediksi tersebut dibandingkan dengan token yang sebenarnya. Perbedaannya diringkas dalam nilai loss. Melalui backpropagation dan optimizer, parameter model kemudian diperbarui agar prediksinya menjadi lebih baik. Proses ini dilakukan berulang kali pada data yang sangat besar.">
+      <div class="eyebrow">09 · Learning loop</div>
+      <h2>Prediksi → kesalahan → <span class="good">perbaikan</span></h2>
+      <div class="flow" style="flex-wrap:wrap">
+        <div class="node">Konteks</div><div class="arrow">→</div>
+        <div class="node">Prediksi</div><div class="arrow">→</div>
+        <div class="node">Hitung loss</div><div class="arrow">→</div>
+        <div class="node">Update parameter</div>
+      </div>
+      <div class="card" style="margin-top:38px;text-align:center">
+        <p style="margin:0;font-size:clamp(26px,2.55vw,43px);font-weight:850">Ulangi pada <span class="accent">data dalam jumlah besar</span></p>
+      </div>
+    </section>
+
+    <section class="slide" data-notes="Parameter adalah angka-angka internal yang menentukan bagaimana model mengolah input dan menghasilkan probabilitas output. Ketika orang mengatakan sebuah model memiliki tujuh miliar parameter, yang dimaksud adalah miliaran nilai numerik yang dipelajari selama training, bukan miliaran jawaban yang disimpan di dalam database.">
+      <div class="eyebrow">10 · Parameter</div>
+      <h2>Apa yang sebenarnya <span class="accent">dipelajari?</span></h2>
+      <div class="quote">Parameter adalah angka-angka internal yang diperbarui selama training.</div>
+      <div class="flow" style="margin-top:38px">
+        <div class="node">Input token</div><div class="arrow">→</div>
+        <div class="node" style="border-color:var(--orange)"><span class="warm">Miliaran parameter</span></div><div class="arrow">→</div>
+        <div class="node">Probabilitas</div>
+      </div>
+    </section>
+
+    <section class="slide" data-notes="Tidak semua language model melakukan next-token prediction dengan cara yang sama. Masked language model, seperti BERT, menebak token yang disembunyikan dan dapat menggunakan konteks di kiri serta kanan. Autoregressive language model, seperti GPT, memprediksi token berikutnya berdasarkan token-token sebelumnya.">
+      <div class="eyebrow">11 · Dua pendekatan</div>
+      <h2>Masked vs <span class="accent">autoregressive</span></h2>
+      <div class="grid-2">
+        <div class="card">
+          <span class="tag">BERT · Masked</span>
+          <div class="code" style="margin:20px 0">The cat <span class="warm">[MASK]</span> on the mat.</div>
+          <p class="muted">Melihat konteks di <strong>kiri dan kanan</strong>.</p>
+        </div>
+        <div class="card">
+          <span class="tag">GPT · Autoregressive</span>
+          <div class="code" style="margin:20px 0">The cat sat on the <span class="warm">...</span></div>
+          <p class="muted">Memprediksi dari token-token <strong>sebelumnya</strong>.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide" data-notes="Saat inference, distribusi probabilitas tadi digunakan untuk memilih token berikutnya. Token dapat dipilih secara langsung atau melalui sampling, tergantung strategi decoding. Token yang terpilih ditambahkan ke konteks, lalu proses yang sama diulang. Dari pengulangan sederhana inilah paragraf panjang dapat dihasilkan.">
+      <div class="eyebrow">12 · Inference</div>
+      <h2>Dari prediksi menjadi <span class="warm">generasi</span></h2>
+      <div class="flow" style="flex-wrap:wrap">
+        <div class="node">Prompt</div><div class="arrow">→</div>
+        <div class="node">Probabilitas</div><div class="arrow">→</div>
+        <div class="node">Pilih token</div><div class="arrow">→</div>
+        <div class="node">Tambah ke konteks</div>
+      </div>
+      <p style="margin:auto 0 0;text-align:center;font-size:clamp(34px,4vw,66px);font-weight:900">Satu token <span class="accent">demi</span> satu token.</p>
+    </section>
+
+    <section class="slide" data-notes="Misalnya generasi dimulai dari kata Indonesia. Setelah kata memiliki dipilih, konteks berubah menjadi Indonesia memiliki. Perubahan konteks itu menghasilkan distribusi probabilitas yang baru. Prosesnya terus berulang hingga model menghasilkan tanda berhenti atau mencapai batas output.">
+      <div class="eyebrow">13 · Contoh generasi</div>
+      <h2>Konteks berubah di <span class="accent">setiap langkah</span></h2>
+      <div class="generation">
+        <div>Indonesia</div>
+        <div>Indonesia memiliki</div>
+        <div>Indonesia memiliki banyak</div>
+        <div>Indonesia memiliki banyak pulau</div>
+        <div>Indonesia memiliki banyak pulau yang</div>
+        <div>Indonesia memiliki banyak pulau yang indah</div>
+      </div>
+    </section>
+
+    <section class="slide" data-notes="Karena model belajar dari data, mudah untuk membayangkannya sebagai database besar berisi pasangan kata dan jawaban. Mental model itu kurang tepat. Language model lebih tepat dipahami sebagai fungsi matematika besar yang parameternya telah disesuaikan untuk menangkap pola kompleks di dalam data.">
+      <div class="eyebrow">14 · Miskonsepsi</div>
+      <h2>Apakah LLM hanya <span class="warm">database kata?</span></h2>
+      <p style="font-size:clamp(48px,6vw,96px);font-weight:950;line-height:1;margin:10px 0 32px">BUKAN.</p>
+      <div class="quote">LLM lebih tepat dibayangkan sebagai <span class="accent">fungsi matematika besar</span> dengan parameter yang dipelajari dari data.</div>
+    </section>
+
+    <section class="slide" data-notes="Di sinilah analogi Dancing Men berakhir. Holmes berusaha menemukan substitusi simbol secara eksplisit dan dapat menjelaskan hipotesisnya. Language model mengoptimalkan banyak parameter numerik. Pola yang dipelajarinya tersebar di dalam jaringan dan tidak berbentuk kamus aturan yang sederhana.">
+      <div class="eyebrow">15 · Batas analogi</div>
+      <h2>Holmes <span class="warm">bukan</span> sebuah LLM</h2>
+      <table class="comparison">
+        <thead><tr><th>Sherlock Holmes</th><th>Language model</th></tr></thead>
+        <tbody>
+          <tr><td>Mencari aturan cipher</td><td>Mengoptimalkan parameter</td></tr>
+          <tr><td>Hipotesis eksplisit</td><td>Pola numerik terdistribusi</td></tr>
+          <tr><td>Data relatif sedikit</td><td>Data dalam jumlah besar</td></tr>
+          <tr><td>Dapat menjelaskan aturan</td><td>Tidak berupa kamus sederhana</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section class="slide" data-notes="Jadi inilah mental model lengkapnya. Data teks diubah menjadi token. Model dilatih untuk memprediksi dengan memanfaatkan target dari data itu sendiri. Training membentuk parameter model. Saat digunakan, parameter tersebut menghasilkan distribusi probabilitas, sebuah token dipilih, lalu prosesnya diulang.">
+      <div class="eyebrow">16 · Mental model</div>
+      <h2>Dari data menjadi <span class="accent">output</span></h2>
+      <div class="flow" style="flex-wrap:wrap;gap:10px">
+        <div class="node">Data teks</div><div class="arrow">→</div>
+        <div class="node">Tokenization</div><div class="arrow">→</div>
+        <div class="node">Training</div><div class="arrow">→</div>
+        <div class="node">Parameter</div><div class="arrow">→</div>
+        <div class="node">Probabilitas</div><div class="arrow">→</div>
+        <div class="node">Next token</div>
+      </div>
+      <p class="lede" style="margin:auto 0 0">Pilih token → tambahkan ke konteks → <strong>ulangi</strong>.</p>
+    </section>
+
+    <section class="slide" data-notes="Jika hanya ada tiga hal yang ingin Anda ingat dari video ini: model membaca token, training membentuk parameter dan bukan database jawaban, serta model autoregressive menghasilkan output dengan mengulangi prediksi token berikutnya.">
+      <div class="eyebrow">17 · Ringkasan</div>
+      <h2>Tiga hal untuk <span class="accent">diingat</span></h2>
+      <div class="recap">
+        <div class="num">1</div><p>Model membaca <strong>token</strong>, bukan kata secara langsung.</p>
+        <div class="num">2</div><p>Training membentuk <strong>parameter</strong>, bukan database jawaban.</p>
+        <div class="num">3</div><p>Model autoregressive menghasilkan output <strong>satu token demi satu token</strong>.</p>
+      </div>
+    </section>
+
+    <section class="slide" data-notes="Namun masih ada pertanyaan besar. Bagaimana token direpresentasikan sebagai angka? Dan bagaimana model mengetahui token mana yang relevan terhadap token lain? Di video berikutnya kita akan masuk ke embedding, Transformer, dan attention. Jika pembahasan ini membantu, silakan subscribe agar tidak melewatkan kelanjutannya.">
+      <div class="eyebrow">Berikutnya</div>
+      <h1>Bagaimana model memahami hubungan <span class="accent">antar-token?</span></h1>
+      <div class="token-row" style="margin-top:20px">
+        <span class="token">Embedding</span><span class="arrow">→</span>
+        <span class="token">Transformer</span><span class="arrow">→</span>
+        <span class="token">Attention</span>
+      </div>
+      <p class="lede" style="margin-top:auto">Sampai bertemu di pembahasan berikutnya.</p>
+      <span class="footer-label">Subscribe · Like · Share</span>
+    </section>
+
+    <div class="counter" id="counter" aria-live="polite">01 / 18</div>
+    <div class="progress" aria-hidden="true"><span id="progress"></span></div>
+    <nav class="controls" aria-label="Kontrol presentasi">
+      <button id="prev" title="Slide sebelumnya (←)" aria-label="Slide sebelumnya">←</button>
+      <button id="notes" title="Catatan narasi (N)" aria-label="Tampilkan catatan">N</button>
+      <button id="fullscreen" title="Layar penuh (F)" aria-label="Layar penuh">⛶</button>
+      <button id="next" title="Slide berikutnya (→)" aria-label="Slide berikutnya">→</button>
+    </nav>
+  </main>
+
+  <aside class="notes-panel" id="notesPanel" aria-live="polite"></aside>
+  <div class="kbd-help" id="help">
+    <div class="card">
+      <h3>Kontrol presentasi</h3>
+      <p><kbd>→</kbd><kbd>Space</kbd> Slide berikutnya</p>
+      <p><kbd>←</kbd> Slide sebelumnya</p>
+      <p><kbd>F</kbd> Layar penuh</p>
+      <p><kbd>N</kbd> Catatan narasi</p>
+      <p><kbd>?</kbd> Bantuan ini</p>
+      <p class="small muted">Tekan Escape untuk menutup.</p>
+    </div>
+  </div>
+
+  <script>
+    (() => {
+      const deck = document.getElementById('deck');
+      const slides = [...document.querySelectorAll('.slide')];
+      const counter = document.getElementById('counter');
+      const progress = document.getElementById('progress');
+      const notesPanel = document.getElementById('notesPanel');
+      const help = document.getElementById('help');
+      let current = 0;
+
+      function render(index, pushHash = true) {
+        current = Math.max(0, Math.min(index, slides.length - 1));
+        slides.forEach((slide, i) => {
+          slide.classList.toggle('active', i === current);
+          slide.setAttribute('aria-hidden', i === current ? 'false' : 'true');
+        });
+        counter.textContent = `${String(current + 1).padStart(2, '0')} / ${String(slides.length).padStart(2, '0')}`;
+        progress.style.width = `${((current + 1) / slides.length) * 100}%`;
+        notesPanel.innerHTML = `<b>Catatan slide ${current + 1}:</b> ${slides[current].dataset.notes || 'Tidak ada catatan.'}`;
+        if (pushHash) history.replaceState(null, '', `#${current + 1}`);
+      }
+
+      function toggleFullscreen() {
+        if (!document.fullscreenElement) deck.requestFullscreen?.();
+        else document.exitFullscreen?.();
+      }
+
+      function toggleNotes() {
+        notesPanel.classList.toggle('show');
+      }
+
+      document.getElementById('prev').addEventListener('click', () => render(current - 1));
+      document.getElementById('next').addEventListener('click', () => render(current + 1));
+      document.getElementById('notes').addEventListener('click', toggleNotes);
+      document.getElementById('fullscreen').addEventListener('click', toggleFullscreen);
+
+      document.addEventListener('keydown', (event) => {
+        if (['ArrowRight', 'PageDown', ' '].includes(event.key)) {
+          event.preventDefault(); render(current + 1);
+        } else if (['ArrowLeft', 'PageUp'].includes(event.key)) {
+          event.preventDefault(); render(current - 1);
+        } else if (event.key === 'Home') {
+          render(0);
+        } else if (event.key === 'End') {
+          render(slides.length - 1);
+        } else if (event.key.toLowerCase() === 'f') {
+          toggleFullscreen();
+        } else if (event.key.toLowerCase() === 'n') {
+          toggleNotes();
+        } else if (event.key === '?') {
+          help.classList.toggle('show');
+        } else if (event.key === 'Escape') {
+          help.classList.remove('show');
+          notesPanel.classList.remove('show');
+        }
+      });
+
+      let touchStartX = 0;
+      deck.addEventListener('touchstart', e => { touchStartX = e.changedTouches[0].screenX; }, {passive: true});
+      deck.addEventListener('touchend', e => {
+        const delta = e.changedTouches[0].screenX - touchStartX;
+        if (Math.abs(delta) > 45) render(current + (delta < 0 ? 1 : -1));
+      }, {passive: true});
+
+      help.addEventListener('click', () => help.classList.remove('show'));
+      const initial = Number(location.hash.slice(1)) - 1;
+      render(Number.isFinite(initial) && initial >= 0 ? initial : 0, false);
+    })();
+  </script>
+</body>
+</html>

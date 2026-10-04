@@ -2,8 +2,8 @@ import './globals.css';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: "Alam Asy'arie",
-  description: 'Personal site dengan home, blog, dan notes menggunakan Next.js dan Markdown.',
+  title: "Alam Asy’arie",
+  description: 'Learning computer science by building software and writing in public.',
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

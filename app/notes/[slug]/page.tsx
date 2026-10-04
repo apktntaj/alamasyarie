@@ -21,10 +21,12 @@ export default function NotePage({ params }: NotePageProps) {
       <section className="container">
         <div className="card">
           <h1 className="title">{post.title}</h1>
-          <div className="metadata">
-            <strong>Tanggal</strong>
-            <span>{post.date}</span>
-          </div>
+          {post.date ? (
+            <div className="metadata">
+              <strong>Tanggal</strong>
+              <span>{post.date}</span>
+            </div>
+          ) : null}
           <MarkdownContent markdown={post.content} />
         </div>
       </section>

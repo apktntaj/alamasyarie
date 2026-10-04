@@ -14,8 +14,12 @@ export default function NotesPage() {
       <SiteHeader />
       <section className="container">
         <div className="card">
-          <h1 className="title">Notes</h1>
-          <p className="subtitle">Catatan singkat dan insight singkat yang saya kumpulkan setiap hari.</p>
+          <p className="eyebrow">Notes</p>
+          <h1 className="title">Short notes from ongoing study.</h1>
+          <p className="subtitle">
+            In-progress observations from learning computer science, building software, and following ideas
+            before they are fully formed.
+          </p>
         </div>
         <ul className="post-list">
           {posts.map((post) => (
@@ -23,10 +27,12 @@ export default function NotesPage() {
               <h3>
                 <Link href={`/notes/${post.slug}`}>{post.title}</Link>
               </h3>
-              <div className="metadata">
-                <span>Tanggal</span>
-                <span>{post.date}</span>
-              </div>
+              {post.date ? (
+                <div className="metadata">
+                  <span>Tanggal</span>
+                  <span>{post.date}</span>
+                </div>
+              ) : null}
               <p>{post.excerpt}</p>
             </li>
           ))}

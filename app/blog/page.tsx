@@ -14,8 +14,12 @@ export default function BlogPage() {
       <SiteHeader />
       <section className="container">
         <div className="card">
-          <h1 className="title">Blog</h1>
-          <p className="subtitle">Kumpulan tulisan panjang saya tentang teknologi, ide, dan pengalaman.</p>
+          <p className="eyebrow">Writing</p>
+          <h1 className="title">Notes from learning computer science and building software.</h1>
+          <p className="subtitle">
+            Longer reflections on computer science, software design, programming languages, systems, AI
+            engineering, and the work of building Pesisir.
+          </p>
         </div>
         <ul className="post-list">
           {posts.map((post) => (
@@ -23,13 +27,18 @@ export default function BlogPage() {
               <h3>
                 <Link href={`/blog/${post.slug}`}>{post.title}</Link>
               </h3>
-              <div className="metadata">
-                <span>{post.date}</span>
-              </div>
+              {post.date ? (
+                <div className="metadata">
+                  <span>{post.date}</span>
+                </div>
+              ) : null}
               <p>{post.excerpt}</p>
             </li>
           ))}
         </ul>
+        <p className="section-link">
+          Looking for shorter, unfinished thoughts? <Link href="/notes">Browse Notes →</Link>
+        </p>
       </section>
     </main>
   );
